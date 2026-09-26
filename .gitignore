@@ -1,0 +1,21 @@
+# Credenciales (regla 30: nunca hardcodear ni versionar)
+.env
+.env.*
+!.env.example
+
+# Datos de Postgres si alguna vez se usa un bind mount en vez del volumen nombrado
+pgdata/
+
+# Respaldos locales de scripts/backup.sh
+backups/
+*.dump
+
+# SO / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/

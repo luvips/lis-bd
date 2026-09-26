@@ -1,0 +1,6 @@
+# Solo desarrollo local: expone el puerto de Postgres al host. No se usa en
+# la EC2, para no exponerlo (regla 29).
+services:
+  db:
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"

@@ -1,0 +1,12 @@
+# La imagen solo copia sql/schema.sql; todo lo demás se ignora.
+.git
+.env
+.env.*
+!.env.example
+backups/
+docs/
+seed/
+tests/
+context/
+plans/
+*.md

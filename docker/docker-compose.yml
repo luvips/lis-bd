@@ -1,0 +1,36 @@
+# No publica el puerto 5432 al host: en producción solo contenedores de la
+# misma red de compose llegan a "db:5432" (regla 29, mínimo privilegio).
+name: lis-laboratorio
+
+services:
+  db:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: lis-laboratorio-db:${TAG:-local}
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-lis_laboratorio}
+      POSTGRES_USER: ${POSTGRES_USER:?falta POSTGRES_USER en .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?falta POSTGRES_PASSWORD en .env}
+      PGDATA: /var/lib/postgresql/data/pgdata
+      # Roles de aplicación (sql/09_roles.sql los lee con \getenv). Ninguno
+      # se usa para el bootstrap de Postgres; solo existen para que la fase
+      # de roles cree las 5 cuentas de conexión de mínimo privilegio.
+      APP_RECEPCION_PASSWORD: ${APP_RECEPCION_PASSWORD:?falta APP_RECEPCION_PASSWORD en .env}
+      APP_LABORATORIO_PASSWORD: ${APP_LABORATORIO_PASSWORD:?falta APP_LABORATORIO_PASSWORD en .env}
+      APP_SUPERVISOR_PASSWORD: ${APP_SUPERVISOR_PASSWORD:?falta APP_SUPERVISOR_PASSWORD en .env}
+      APP_CAJA_PASSWORD: ${APP_CAJA_PASSWORD:?falta APP_CAJA_PASSWORD en .env}
+      APP_REPORTING_PASSWORD: ${APP_REPORTING_PASSWORD:?falta APP_REPORTING_PASSWORD en .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  pgdata:
+    name: lis_laboratorio_pgdata
