@@ -1,4 +1,4 @@
-.PHONY: build up down restart logs ps psql test backup down-v
+.PHONY: build up up-admin down restart logs ps psql test seed seed-catalogo seed-volumen backup down-v
 
 COMPOSE = docker compose -f docker/docker-compose.yml --env-file .env
 
