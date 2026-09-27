@@ -8,6 +8,9 @@ build: ## Construye la imagen (hornea sql/schema.sql adentro)
 up: ## Levanta db en segundo plano (local: expone 5432 vía override; EC2: no)
 	$(COMPOSE) up -d --build
 
+up-admin: ## Como "up", pero además publica 5432 solo en 127.0.0.1 (para pgAdmin vía túnel SSH; ver docker/docker-compose.admin.yml)
+	docker compose -f docker/docker-compose.yml -f docker/docker-compose.admin.yml --env-file .env up -d --build
+
 down: ## Detiene y quita el contenedor; conserva el volumen de datos
 	$(COMPOSE) down
 

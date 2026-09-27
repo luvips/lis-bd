@@ -1,0 +1,16 @@
+# Solo para administración remota (ej. pgAdmin desde tu máquina hacia la
+# EC2), NUNCA se usa solo. Publica el puerto únicamente en 127.0.0.1 de la
+# propia instancia: sigue sin ser alcanzable desde internet ni desde el
+# Security Group; la única forma de llegar es un túnel SSH (que ya exige tu
+# llave privada), igual que si abrieras una sesión de shell.
+#
+# Uso en la EC2:
+#   docker compose -f docker/docker-compose.yml -f docker/docker-compose.admin.yml --env-file .env up -d
+#
+# En pgAdmin (Windows): pestaña "Connection" -> Host 127.0.0.1, puerto 5432;
+# pestaña "SSH Tunnel" -> activarlo, host = IP pública/Elastic IP de la EC2,
+# usuario = ubuntu, archivo de identidad = tu .pem o llave privada.
+services:
+  db:
+    ports:
+      - "127.0.0.1:5432:5432"

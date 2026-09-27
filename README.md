@@ -74,6 +74,21 @@ compose llegan a `db:5432`. `docker-compose.override.yml` solo existe para desar
 local y expone el puerto; se combina automáticamente cuando ambos archivos están en
 el mismo directorio y se listan con `-f`, como hace `make`.
 
+**Administrar la EC2 con pgAdmin (u otro cliente gráfico) sin exponer el puerto:**
+`docker/docker-compose.admin.yml` publica 5432 solo en `127.0.0.1` de la propia
+instancia — sigue sin llegar nadie desde internet, la única puerta es un túnel SSH
+(que ya exige tu llave privada). En la EC2:
+
+```sh
+make up-admin
+```
+
+En pgAdmin: pestaña **Connection** → Host `127.0.0.1`, puerto `5432`, Maintenance
+database `lis_laboratorio`, Username `lis_admin`, Password la de `POSTGRES_PASSWORD`
+en tu `.env`. Pestaña **SSH Tunnel** → actívalo, Tunnel host = la IP pública/Elastic
+IP de la EC2, Username `ubuntu`, Identity file = tu `.pem`. Cuando termines, vuelve a
+`make up` (sin `-admin`) para no dejar ni siquiera esa puerta local abierta de más.
+
 **Desplegar en la EC2** (mínimo viable, sin registry):
 
 ```sh
